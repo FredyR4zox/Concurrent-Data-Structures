@@ -1,8 +1,8 @@
 package pc.set;
 
 /**
- * 
- * Interface for a set. 
+ *
+ * Interface for a set.
  *
  * @param <E> Type of elements in the set.
  */
@@ -21,7 +21,7 @@ public interface Set<E> {
    *  <code>false</code> if the set already contained the element.
    */
   boolean add(E elem);
-  
+
   /**
    * Remove an element from the set.
    * @param elem The element to remove.
@@ -30,7 +30,7 @@ public interface Set<E> {
    *  <code>false</code> if the set does not contain the element.
    */
   boolean remove(E elem);
-  
+
   /**
    * Check if an element belongs to the set.
    * @param elem The element to search.
@@ -39,5 +39,5 @@ public interface Set<E> {
    *  <code>false</code> otherwise.
    */
   boolean contains(E elem);
-  
+
 }

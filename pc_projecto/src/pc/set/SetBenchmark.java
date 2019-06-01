@@ -11,7 +11,7 @@ public class SetBenchmark {
 
   private static final int DURATION = 10;
   private static final int MAX_THREADS = 32;
-  private static final int N = 256;
+  private static final int N = 4096;
 
   /**
    * Program to run a benchmark over set implementations.
@@ -21,17 +21,21 @@ public class SetBenchmark {
     //double serial = runBenchmark(1, new UStack<Integer>());
 
     for (int n = 1; n <= MAX_THREADS; n = n * 2) {
-      runBenchmark(n, new LHashSet<Integer>(false));
-      runBenchmark(n, new LHashSet<Integer>(true));
+      runBenchmark(n, new LHashSetRL<Integer>(false), false);
+      runBenchmark(n, new LHashSetRL<Integer>(true), true);
+      runBenchmark(n, new LHashSetRLArray<Integer>(false), false);
+      runBenchmark(n, new LHashSetRLArray<Integer>(true), true);
+      runBenchmark(n, new LHashSetRRWLArray<Integer>(false), false);
+      runBenchmark(n, new LHashSetRRWLArray<Integer>(true), true);
     }
   }
 
-  private static void runBenchmark(int threads, Set<Integer> s) {
-    for (int i = 0; i < N; i++) { 
-      s.add(i); 
+  private static void runBenchmark(int threads, Set<Integer> s, boolean fair) {
+    for (int i = 0; i < N; i++) {
+      s.add(i);
     }
     Benchmark b = new Benchmark(threads, DURATION, new SetOperation(s));
-    System.out.printf("%d threads using %s ... ", threads, s.getClass().getSimpleName());
+    System.out.printf("%d threads using %s with fairness %b ... ", threads, s.getClass().getSimpleName(), fair);
     System.out.printf("%.2f Mops/s%n", b.run());
   }
 
