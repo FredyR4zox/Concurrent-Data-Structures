@@ -14,7 +14,7 @@ public class LHashSetRL<E> implements Set<E>{
 
   private LinkedList<E>[] table;
   private int size;
-  private final ReentrantLock rl; // TODO this is not being used
+  private final ReentrantLock rl;
 
   /**
    * Constructor.

@@ -15,7 +15,7 @@ public class LHashSetRRWLArray<E> implements Set<E>{
 
   private LinkedList<E>[] table;
   private final AtomicInteger size;
-  private final ReentrantReadWriteLock[] rl; // TODO this is not being used
+  private final ReentrantReadWriteLock[] rl;
 
   /**
    * Constructor.
