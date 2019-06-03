@@ -29,7 +29,16 @@ public class LHashSetRL<E> implements Set<E>{
 
   @Override
   public int size() {
-    return size;
+    int aux;
+
+    rl.lock();
+    try {
+      aux = size;
+    } finally {
+      rl.unlock();
+    }
+
+    return aux;
   }
 
   private LinkedList<E> getEntry(E elem) {

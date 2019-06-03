@@ -21,23 +21,26 @@ public class StackBenchmark {
     //double serial = runBenchmark(1, new UStack<Integer>());
 
     for (int n = 1; n <= MAX_THREADS; n = n * 2) {
-      runBenchmark(n, new LLinkedStack<Integer>());
-      runBenchmark(n, new LArrayStack<Integer>());
-      runBenchmark(n, new ALinkedStack<Integer>(false));
-      runBenchmark(n, new ALinkedStack<Integer>(true));
-//      runBenchmark(n, new ALinkedStackASR<Integer>(false));
-//      runBenchmark(n, new ALinkedStackASR<Integer>(true));
-//      runBenchmark(n, new AArrayStack<Integer>(false));
-//      runBenchmark(n, new AArrayStack<Integer>(true));
+      runBenchmark(n, new LLinkedStack<Integer>(), false);
+      runBenchmark(n, new LArrayStack<Integer>(), false);
+      System.out.println();
+      runBenchmark(n, new ALinkedStack<Integer>(false), false);
+      runBenchmark(n, new ALinkedStackASR<Integer>(false), false);
+      runBenchmark(n, new AArrayStack<Integer>(false), false);
+      System.out.println();
+      runBenchmark(n, new ALinkedStack<Integer>(true), true);
+      runBenchmark(n, new ALinkedStackASR<Integer>(true), true);
+      runBenchmark(n, new AArrayStack<Integer>(true), true);
+      System.out.println();
     }
   }
 
-  private static void runBenchmark(int threads, Stack<Integer> s) {
-    for (int i = 0; i < INITIAL_ELEMENTS_IN_STACK; i++) { 
-      s.push(i); 
+  private static void runBenchmark(int threads, Stack<Integer> s, boolean backoff) {
+    for (int i = 0; i < INITIAL_ELEMENTS_IN_STACK; i++) {
+      s.push(i);
     }
     Benchmark b = new Benchmark(threads, DURATION, new StackOperation(s));
-    System.out.printf("%d threads using %s ... ", threads, s.getClass().getSimpleName());
+    System.out.printf("%-3d threads using %-15s with backoff %-5b ... ", threads, s.getClass().getSimpleName(), backoff);
     System.out.printf("%.2f Mops/s%n", b.run());
   }
 
@@ -61,5 +64,3 @@ public class StackBenchmark {
     }
   }
 }
-
-

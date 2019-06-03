@@ -1,12 +1,13 @@
 package pc.stack;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicMarkableReference;
+import java.util.concurrent.atomic.AtomicStampedReference;
+
 
 /**
  * Lock-free, array-based stack with optional exponential back-off
  * scheme.
- * 
+ *
  * @param <E> Type of elements in the stack.
  */
 public class AArrayStack<E> implements Stack<E> {
@@ -14,7 +15,7 @@ public class AArrayStack<E> implements Stack<E> {
   private final int INITIAL_CAPACITY = 16;
   private E[] array;
   private final Backoff backoff;
-
+    private final AtomicStampedReference<Boolean> ref;
   /**
    * Constructor with no arguments, disabling back-off by default.
    */
@@ -30,12 +31,13 @@ public class AArrayStack<E> implements Stack<E> {
   public AArrayStack(boolean enableBackoff) {
     array = (E[]) new Object[INITIAL_CAPACITY];
     backoff = enableBackoff ? new Backoff() : null;
+    ref = new AtomicStampedReference<>(true, 0);
     // TODO ... what to use ?
   }
 
   @Override
   public int size() {
-    return 0; // TODO
+    return ref.getStamp();
   }
 
   @Override
@@ -43,13 +45,51 @@ public class AArrayStack<E> implements Stack<E> {
     if (elem == null) {
       throw new IllegalArgumentException();
     }
+    while (true) {
+      int n = ref.getStamp();
+      if (ref.compareAndSet(true, false, n, n+1)) {
+        if (n == array.length) {
+          array = Arrays.copyOf(array, 2 * array.length);
+        }
+        array[n] = elem;
 
-    // TODO ...
+        ref.set(true, n+1);
+        if (backoff != null) {
+          backoff.diminish();
+        }
+        break;
+      }
+      if (backoff != null) {
+        backoff.delay();
+      }
+    }
+
   }
 
   @Override
   public E pop() {
     E elem = null;
+    while (true) {
+      int n = ref.getStamp();
+      if (n == 0) {
+        elem = null;
+        break;
+      }
+
+      if (ref.compareAndSet(true, false, n, n - 1)) {
+        elem = array[n - 1];
+        array[n - 1] = null;
+        ref.set(true, n-1);
+        if (backoff != null) {
+          backoff.diminish();
+        }
+        break;
+      }
+      if (backoff != null) {
+        backoff.delay();
+      }
+    }
+
     // TODO ...
 
     return elem;
@@ -63,4 +103,4 @@ public class AArrayStack<E> implements Stack<E> {
       return new AArrayStack<>();
     }
   }
-} 
+}

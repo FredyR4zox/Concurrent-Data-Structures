@@ -51,7 +51,6 @@ public class LArrayStack<E> implements Stack<E> {
       if (top > 0) {
         top --;
         elem = array[top];
-        array[top] = null;
       }
     }
     return elem;

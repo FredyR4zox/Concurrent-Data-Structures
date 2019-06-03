@@ -22,11 +22,13 @@ public class SetBenchmark {
 
     for (int n = 1; n <= MAX_THREADS; n = n * 2) {
       runBenchmark(n, new LHashSetRL<Integer>(false), false);
-      runBenchmark(n, new LHashSetRL<Integer>(true), true);
       runBenchmark(n, new LHashSetRLArray<Integer>(false), false);
-      runBenchmark(n, new LHashSetRLArray<Integer>(true), true);
       runBenchmark(n, new LHashSetRRWLArray<Integer>(false), false);
+      System.out.println();
+      runBenchmark(n, new LHashSetRL<Integer>(true), true);
+      runBenchmark(n, new LHashSetRLArray<Integer>(true), true);
       runBenchmark(n, new LHashSetRRWLArray<Integer>(true), true);
+      System.out.println();
     }
   }
 
@@ -35,7 +37,7 @@ public class SetBenchmark {
       s.add(i);
     }
     Benchmark b = new Benchmark(threads, DURATION, new SetOperation(s));
-    System.out.printf("%d threads using %s with fairness %b ... ", threads, s.getClass().getSimpleName(), fair);
+    System.out.printf("%-3d threads using %-17s with fairness %-5b ... ", threads, s.getClass().getSimpleName(), fair);
     System.out.printf("%.2f Mops/s%n", b.run());
   }
 
