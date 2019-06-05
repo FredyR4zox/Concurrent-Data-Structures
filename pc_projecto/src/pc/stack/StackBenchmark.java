@@ -41,7 +41,12 @@ public class StackBenchmark {
     }
     Benchmark b = new Benchmark(threads, DURATION, new StackOperation(s));
     System.out.printf("%-3d threads using %-15s with backoff %-5b ... ", threads, s.getClass().getSimpleName(), backoff);
-    System.out.printf("%.2f Mops/s%n", b.run());
+
+    double m = 0;
+    for(int i=0; i<5; i++)
+      m += b.run();
+
+    System.out.printf("%.2f Mops/s%n", m/5);
   }
 
   private static class StackOperation implements Runnable {

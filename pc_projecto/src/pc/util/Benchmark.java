@@ -14,9 +14,9 @@ public final class Benchmark {
    * Number of threads.
    */
   private final int n_threads;
-  
+
   /**
-   * Duration of benchmark in seconds. 
+   * Duration of benchmark in seconds.
    */
   private final int duration;
 
@@ -24,22 +24,22 @@ public final class Benchmark {
    * Execution step.
    */
   private final Runnable step;
-  
+
   /**
    * Synchronization barrier.
    */
-  private final CyclicBarrier barrier; 
+  private final CyclicBarrier barrier;
 
   /**
    * Termination flag.
    */
   private final AtomicBoolean completionFlag;
-  
+
   /**
    * Adder.
    */
   private final AtomicLong stepCounter;
-  
+
 
   /**
    * Constructor.
@@ -58,14 +58,14 @@ public final class Benchmark {
 
   private class BThread extends Thread {
     long numberOfSteps = 0;
-    
+
     @Override
     public void run()  {
       try {
         barrier.await();
         while (! completionFlag.get()) {
           step.run();;
-          numberOfSteps++; 
+          numberOfSteps++;
         }
         stepCounter.getAndAdd(numberOfSteps);
         barrier.await();
@@ -79,7 +79,7 @@ public final class Benchmark {
       }
     }
   }
-   
+
   /**
    * Run the benchmark.
    * @return Throughput of operations in the scale of million operations per second.

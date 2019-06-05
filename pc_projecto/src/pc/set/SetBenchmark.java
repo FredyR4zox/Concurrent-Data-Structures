@@ -38,7 +38,12 @@ public class SetBenchmark {
     }
     Benchmark b = new Benchmark(threads, DURATION, new SetOperation(s));
     System.out.printf("%-3d threads using %-17s with fairness %-5b ... ", threads, s.getClass().getSimpleName(), fair);
-    System.out.printf("%.2f Mops/s%n", b.run());
+
+    double m = 0;
+    for(int i=0; i<5; i++)
+      m += b.run();
+
+    System.out.printf("%.2f Mops/s%n", m/5);
   }
 
   private static class SetOperation implements Runnable {
@@ -59,6 +64,12 @@ public class SetBenchmark {
           set.add(v);
           break;
         case 1:
+          set.add(v);
+          break;
+        case 2:
+          set.remove(v);
+          break;
+        case 3:
           set.remove(v);
           break;
         default:
