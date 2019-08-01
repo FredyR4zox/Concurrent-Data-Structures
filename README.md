@@ -12,7 +12,7 @@ Java and Cooperari.
 ```bash
 export PATH=$PWD/cooperari-0.3/bin:$PATH
 cd pc_projecto
-cjavac                        # Compile all code
+cjavac                        # Compile all code.
 cjunit pc.stack.AllTests      # Execute cooperari tests for the stack implementations.
 cjunitp pc.stack.AllTests     # Execute cooperari tests for the stack implementations but in preemptive mode.
 cjava pc.stack.StackBenchmark # Benchmark the stack implementations.
